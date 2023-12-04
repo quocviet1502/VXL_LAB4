@@ -2775,15 +2775,15 @@ LOAD c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
  .text.Scheduler_Init
                 0x0000000008000440       0x18 ./Core/Src/scheduler.o
                 0x0000000008000440                Scheduler_Init
- .text.Scheduler_Add_Task
-                0x0000000008000458       0xb0 ./Core/Src/scheduler.o
-                0x0000000008000458                Scheduler_Add_Task
  .text.Scheduler_Update
-                0x0000000008000508       0xd4 ./Core/Src/scheduler.o
-                0x0000000008000508                Scheduler_Update
+                0x0000000008000458       0xd4 ./Core/Src/scheduler.o
+                0x0000000008000458                Scheduler_Update
  .text.Scheduler_Dispatch_Task
-                0x00000000080005dc       0xd0 ./Core/Src/scheduler.o
-                0x00000000080005dc                Scheduler_Dispatch_Task
+                0x000000000800052c       0xd0 ./Core/Src/scheduler.o
+                0x000000000800052c                Scheduler_Dispatch_Task
+ .text.Scheduler_Add_Task
+                0x00000000080005fc       0xb0 ./Core/Src/scheduler.o
+                0x00000000080005fc                Scheduler_Add_Task
  .text.Scheduler_Delete_Task
                 0x00000000080006ac      0x188 ./Core/Src/scheduler.o
                 0x00000000080006ac                Scheduler_Delete_Task

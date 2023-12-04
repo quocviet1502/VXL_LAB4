@@ -1,5 +1,5 @@
 /*
- * Scheduler.h
+ * scheduler.h
  *
  *  Created on: Nov 20, 2023
  *      Author: Quoc Viet
@@ -16,7 +16,6 @@
 
 extern char str[50];
 
-
 #define TICK 10
 #define MAX_TASK 40
 #define NORMAL 0
@@ -30,7 +29,6 @@ typedef struct {
 	uint8_t Runme;
 	uint32_t Task_ID;
 } Scheduler_Task;
-
 
 void Scheduler_Init();
 uint32_t Scheduler_Add_Task(void (*pfunction)(),uint32_t delay, uint32_t period);

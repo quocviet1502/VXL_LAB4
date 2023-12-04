@@ -116,8 +116,8 @@ Scheduler_Add_Task(toggle_led4, 400, 2500);
 Scheduler_Add_Task(toggle_led5,1000, 0);
 
 
-  while (1)
-  {
+ while (1)
+ {
 	  Scheduler_Dispatch_Task();
 
 	 if(order != 0)  {

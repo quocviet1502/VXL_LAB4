@@ -1,5 +1,5 @@
 /*
- * Scheduler.c
+ * scheduler.c
  *
  *  Created on: Nov 20, 2023
  *      Author: Quoc Viet
@@ -12,10 +12,39 @@ uint32_t current_index = 0;
 uint8_t ERROR_CODE_G = NORMAL;
 
 
-
 void Scheduler_Init(){
 	 current_index = 0;
 }
+
+void Scheduler_Update(){
+	for(int index = 0 ; index  < current_index ; ++index){
+		if(Scheduler_Task_Array[index].Delay > 0){
+			Scheduler_Task_Array[index].Delay -= TICK;
+		}
+		else{
+			Scheduler_Task_Array[index].Runme += 1;
+			if(Scheduler_Task_Array[index].Period >0){
+				Scheduler_Task_Array[index].Delay = Scheduler_Task_Array[index].Period;
+			}
+		}
+	}
+}
+
+void Scheduler_Dispatch_Task(){
+	for(int index = 0 ; index  < current_index; ++index){
+		if(Scheduler_Task_Array[index].Runme >0){
+			(*Scheduler_Task_Array[index].pfunction)();
+			/* CODE TO TEST SCHEDULER BEGIN*/
+			sprintf(str, "Task %d has Dispatch at Tick %ld ms \r\n",order,counter);
+			/*CODE TO TEST SCHEDULER END*/
+			Scheduler_Task_Array[index].Runme -= 1;
+			if(Scheduler_Task_Array[index].Period == 0){
+				Scheduler_Delete_Task(Scheduler_Task_Array[index].Task_ID);
+			}
+		}
+	}
+}
+
 uint32_t Scheduler_Add_Task(void (*pfunction)(),uint32_t delay, uint32_t period){
 	if(current_index < MAX_TASK){
 		Scheduler_Task_Array[current_index].pfunction = pfunction;
@@ -30,35 +59,6 @@ uint32_t Scheduler_Add_Task(void (*pfunction)(),uint32_t delay, uint32_t period)
 		ERROR_CODE_G = ERROR_SCHEDULER_TOO_MANY_TASK;
 		return 0;
 	}
-
-}
-void Scheduler_Update(){
-	for(int index = 0 ; index  < current_index ; ++index){
-		if(Scheduler_Task_Array[index].Delay > 0){
-			Scheduler_Task_Array[index].Delay -= TICK;
-		}
-		else{
-			Scheduler_Task_Array[index].Runme += 1;
-			if(Scheduler_Task_Array[index].Period >0){
-				Scheduler_Task_Array[index].Delay = Scheduler_Task_Array[index].Period;
-			}
-		}
-	}
-}
-void Scheduler_Dispatch_Task(){
-	for(int index = 0 ; index  < current_index; ++index){
-		if(Scheduler_Task_Array[index].Runme >0){
-			(*Scheduler_Task_Array[index].pfunction)();
-			/* CODE TO TEST SCHEDULER BEGIN*/
-			sprintf(str, "Task %d has Dispatch at Tick %ld ms \r\n",order,counter);
-			/*CODE TO TEST SCHEDULER END*/
-			Scheduler_Task_Array[index].Runme -= 1;
-			if(Scheduler_Task_Array[index].Period == 0){
-				Scheduler_Delete_Task(Scheduler_Task_Array[index].Task_ID);
-			}
-		}
-	}
-
 }
 
 uint32_t Scheduler_Delete_Task(uint32_t task_ID){

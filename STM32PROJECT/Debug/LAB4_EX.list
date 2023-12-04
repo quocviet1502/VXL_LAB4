@@ -160,33 +160,33 @@ Scheduler_Add_Task(toggle_led1, 100, 1000);
  80001b2:	f44f 727a 	mov.w	r2, #1000	; 0x3e8
  80001b6:	2164      	movs	r1, #100	; 0x64
  80001b8:	481a      	ldr	r0, [pc, #104]	; (8000224 <main+0xc8>)
- 80001ba:	f000 f94d 	bl	8000458 <Scheduler_Add_Task>
+ 80001ba:	f000 fa1f 	bl	80005fc <Scheduler_Add_Task>
 Scheduler_Add_Task(toggle_led2, 200, 1500);
  80001be:	f240 52dc 	movw	r2, #1500	; 0x5dc
  80001c2:	21c8      	movs	r1, #200	; 0xc8
  80001c4:	4818      	ldr	r0, [pc, #96]	; (8000228 <main+0xcc>)
- 80001c6:	f000 f947 	bl	8000458 <Scheduler_Add_Task>
+ 80001c6:	f000 fa19 	bl	80005fc <Scheduler_Add_Task>
 Scheduler_Add_Task(toggle_led3, 300, 2000);
  80001ca:	f44f 62fa 	mov.w	r2, #2000	; 0x7d0
  80001ce:	f44f 7196 	mov.w	r1, #300	; 0x12c
  80001d2:	4816      	ldr	r0, [pc, #88]	; (800022c <main+0xd0>)
- 80001d4:	f000 f940 	bl	8000458 <Scheduler_Add_Task>
+ 80001d4:	f000 fa12 	bl	80005fc <Scheduler_Add_Task>
 Scheduler_Add_Task(toggle_led4, 400, 2500);
  80001d8:	f640 12c4 	movw	r2, #2500	; 0x9c4
  80001dc:	f44f 71c8 	mov.w	r1, #400	; 0x190
  80001e0:	4813      	ldr	r0, [pc, #76]	; (8000230 <main+0xd4>)
- 80001e2:	f000 f939 	bl	8000458 <Scheduler_Add_Task>
+ 80001e2:	f000 fa0b 	bl	80005fc <Scheduler_Add_Task>
 Scheduler_Add_Task(toggle_led5,1000, 0);
  80001e6:	2200      	movs	r2, #0
  80001e8:	f44f 717a 	mov.w	r1, #1000	; 0x3e8
  80001ec:	4811      	ldr	r0, [pc, #68]	; (8000234 <main+0xd8>)
- 80001ee:	f000 f933 	bl	8000458 <Scheduler_Add_Task>
+ 80001ee:	f000 fa05 	bl	80005fc <Scheduler_Add_Task>
 
 
   while (1)
   {
 	  Scheduler_Dispatch_Task();
- 80001f2:	f000 f9f3 	bl	80005dc <Scheduler_Dispatch_Task>
+ 80001f2:	f000 f99b 	bl	800052c <Scheduler_Dispatch_Task>
 
 	 if(order != 0)  {
  80001f6:	4b10      	ldr	r3, [pc, #64]	; (8000238 <main+0xdc>)
@@ -564,7 +564,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
  8000414:	af00      	add	r7, sp, #0
  8000416:	6078      	str	r0, [r7, #4]
 	Scheduler_Update();
- 8000418:	f000 f876 	bl	8000508 <Scheduler_Update>
+ 8000418:	f000 f81e 	bl	8000458 <Scheduler_Update>
 	counter += 10;
  800041c:	4b04      	ldr	r3, [pc, #16]	; (8000430 <HAL_TIM_PeriodElapsedCallback+0x20>)
  800041e:	681b      	ldr	r3, [r3, #0]
@@ -605,9 +605,9 @@ __STATIC_FORCEINLINE void __disable_irq(void)
 	...
 
 08000440 <Scheduler_Init>:
+Scheduler_Task Scheduler_Task_Array[MAX_TASK];
 uint32_t current_index = 0;
 uint8_t ERROR_CODE_G = NORMAL;
-
 
 
 void Scheduler_Init(){
@@ -625,341 +625,342 @@ void Scheduler_Init(){
  8000452:	bf00      	nop
  8000454:	2000008c 	.word	0x2000008c
 
-08000458 <Scheduler_Add_Task>:
-uint32_t Scheduler_Add_Task(void (*pfunction)(),uint32_t delay, uint32_t period){
- 8000458:	b480      	push	{r7}
- 800045a:	b085      	sub	sp, #20
- 800045c:	af00      	add	r7, sp, #0
- 800045e:	60f8      	str	r0, [r7, #12]
- 8000460:	60b9      	str	r1, [r7, #8]
- 8000462:	607a      	str	r2, [r7, #4]
-	if(current_index < MAX_TASK){
- 8000464:	4b25      	ldr	r3, [pc, #148]	; (80004fc <Scheduler_Add_Task+0xa4>)
- 8000466:	681b      	ldr	r3, [r3, #0]
- 8000468:	2b27      	cmp	r3, #39	; 0x27
- 800046a:	d83e      	bhi.n	80004ea <Scheduler_Add_Task+0x92>
-		Scheduler_Task_Array[current_index].pfunction = pfunction;
- 800046c:	4b23      	ldr	r3, [pc, #140]	; (80004fc <Scheduler_Add_Task+0xa4>)
- 800046e:	681a      	ldr	r2, [r3, #0]
- 8000470:	4923      	ldr	r1, [pc, #140]	; (8000500 <Scheduler_Add_Task+0xa8>)
- 8000472:	4613      	mov	r3, r2
- 8000474:	009b      	lsls	r3, r3, #2
- 8000476:	4413      	add	r3, r2
- 8000478:	009b      	lsls	r3, r3, #2
- 800047a:	440b      	add	r3, r1
- 800047c:	68fa      	ldr	r2, [r7, #12]
- 800047e:	601a      	str	r2, [r3, #0]
-		Scheduler_Task_Array[current_index].Delay = delay;
- 8000480:	4b1e      	ldr	r3, [pc, #120]	; (80004fc <Scheduler_Add_Task+0xa4>)
- 8000482:	681a      	ldr	r2, [r3, #0]
- 8000484:	491e      	ldr	r1, [pc, #120]	; (8000500 <Scheduler_Add_Task+0xa8>)
- 8000486:	4613      	mov	r3, r2
- 8000488:	009b      	lsls	r3, r3, #2
- 800048a:	4413      	add	r3, r2
- 800048c:	009b      	lsls	r3, r3, #2
- 800048e:	440b      	add	r3, r1
- 8000490:	3304      	adds	r3, #4
- 8000492:	68ba      	ldr	r2, [r7, #8]
- 8000494:	601a      	str	r2, [r3, #0]
-		Scheduler_Task_Array[current_index].Period = period;
- 8000496:	4b19      	ldr	r3, [pc, #100]	; (80004fc <Scheduler_Add_Task+0xa4>)
- 8000498:	681a      	ldr	r2, [r3, #0]
- 800049a:	4919      	ldr	r1, [pc, #100]	; (8000500 <Scheduler_Add_Task+0xa8>)
- 800049c:	4613      	mov	r3, r2
- 800049e:	009b      	lsls	r3, r3, #2
- 80004a0:	4413      	add	r3, r2
- 80004a2:	009b      	lsls	r3, r3, #2
- 80004a4:	440b      	add	r3, r1
- 80004a6:	3308      	adds	r3, #8
- 80004a8:	687a      	ldr	r2, [r7, #4]
- 80004aa:	601a      	str	r2, [r3, #0]
-		Scheduler_Task_Array[current_index].Runme = 0;
- 80004ac:	4b13      	ldr	r3, [pc, #76]	; (80004fc <Scheduler_Add_Task+0xa4>)
- 80004ae:	681a      	ldr	r2, [r3, #0]
- 80004b0:	4913      	ldr	r1, [pc, #76]	; (8000500 <Scheduler_Add_Task+0xa8>)
- 80004b2:	4613      	mov	r3, r2
- 80004b4:	009b      	lsls	r3, r3, #2
- 80004b6:	4413      	add	r3, r2
- 80004b8:	009b      	lsls	r3, r3, #2
- 80004ba:	440b      	add	r3, r1
- 80004bc:	330c      	adds	r3, #12
- 80004be:	2200      	movs	r2, #0
- 80004c0:	701a      	strb	r2, [r3, #0]
-		Scheduler_Task_Array[current_index].Task_ID = current_index;
- 80004c2:	4b0e      	ldr	r3, [pc, #56]	; (80004fc <Scheduler_Add_Task+0xa4>)
- 80004c4:	681a      	ldr	r2, [r3, #0]
- 80004c6:	4b0d      	ldr	r3, [pc, #52]	; (80004fc <Scheduler_Add_Task+0xa4>)
- 80004c8:	6819      	ldr	r1, [r3, #0]
- 80004ca:	480d      	ldr	r0, [pc, #52]	; (8000500 <Scheduler_Add_Task+0xa8>)
- 80004cc:	4613      	mov	r3, r2
- 80004ce:	009b      	lsls	r3, r3, #2
- 80004d0:	4413      	add	r3, r2
- 80004d2:	009b      	lsls	r3, r3, #2
- 80004d4:	4403      	add	r3, r0
- 80004d6:	3310      	adds	r3, #16
- 80004d8:	6019      	str	r1, [r3, #0]
-		current_index++;
- 80004da:	4b08      	ldr	r3, [pc, #32]	; (80004fc <Scheduler_Add_Task+0xa4>)
- 80004dc:	681b      	ldr	r3, [r3, #0]
- 80004de:	3301      	adds	r3, #1
- 80004e0:	4a06      	ldr	r2, [pc, #24]	; (80004fc <Scheduler_Add_Task+0xa4>)
- 80004e2:	6013      	str	r3, [r2, #0]
-		return current_index;
- 80004e4:	4b05      	ldr	r3, [pc, #20]	; (80004fc <Scheduler_Add_Task+0xa4>)
- 80004e6:	681b      	ldr	r3, [r3, #0]
- 80004e8:	e003      	b.n	80004f2 <Scheduler_Add_Task+0x9a>
-	}
-	else{
-		ERROR_CODE_G = ERROR_SCHEDULER_TOO_MANY_TASK;
- 80004ea:	4b06      	ldr	r3, [pc, #24]	; (8000504 <Scheduler_Add_Task+0xac>)
- 80004ec:	2201      	movs	r2, #1
- 80004ee:	701a      	strb	r2, [r3, #0]
-		return 0;
- 80004f0:	2300      	movs	r3, #0
-	}
+08000458 <Scheduler_Update>:
 
-}
- 80004f2:	4618      	mov	r0, r3
- 80004f4:	3714      	adds	r7, #20
- 80004f6:	46bd      	mov	sp, r7
- 80004f8:	bc80      	pop	{r7}
- 80004fa:	4770      	bx	lr
- 80004fc:	2000008c 	.word	0x2000008c
- 8000500:	2000016c 	.word	0x2000016c
- 8000504:	20000090 	.word	0x20000090
-
-08000508 <Scheduler_Update>:
 void Scheduler_Update(){
- 8000508:	b480      	push	{r7}
- 800050a:	b083      	sub	sp, #12
- 800050c:	af00      	add	r7, sp, #0
+ 8000458:	b480      	push	{r7}
+ 800045a:	b083      	sub	sp, #12
+ 800045c:	af00      	add	r7, sp, #0
 	for(int index = 0 ; index  < current_index ; ++index){
- 800050e:	2300      	movs	r3, #0
- 8000510:	607b      	str	r3, [r7, #4]
- 8000512:	e054      	b.n	80005be <Scheduler_Update+0xb6>
+ 800045e:	2300      	movs	r3, #0
+ 8000460:	607b      	str	r3, [r7, #4]
+ 8000462:	e054      	b.n	800050e <Scheduler_Update+0xb6>
 		if(Scheduler_Task_Array[index].Delay > 0){
- 8000514:	492f      	ldr	r1, [pc, #188]	; (80005d4 <Scheduler_Update+0xcc>)
- 8000516:	687a      	ldr	r2, [r7, #4]
- 8000518:	4613      	mov	r3, r2
- 800051a:	009b      	lsls	r3, r3, #2
- 800051c:	4413      	add	r3, r2
- 800051e:	009b      	lsls	r3, r3, #2
- 8000520:	440b      	add	r3, r1
- 8000522:	3304      	adds	r3, #4
- 8000524:	681b      	ldr	r3, [r3, #0]
- 8000526:	2b00      	cmp	r3, #0
- 8000528:	d014      	beq.n	8000554 <Scheduler_Update+0x4c>
+ 8000464:	492f      	ldr	r1, [pc, #188]	; (8000524 <Scheduler_Update+0xcc>)
+ 8000466:	687a      	ldr	r2, [r7, #4]
+ 8000468:	4613      	mov	r3, r2
+ 800046a:	009b      	lsls	r3, r3, #2
+ 800046c:	4413      	add	r3, r2
+ 800046e:	009b      	lsls	r3, r3, #2
+ 8000470:	440b      	add	r3, r1
+ 8000472:	3304      	adds	r3, #4
+ 8000474:	681b      	ldr	r3, [r3, #0]
+ 8000476:	2b00      	cmp	r3, #0
+ 8000478:	d014      	beq.n	80004a4 <Scheduler_Update+0x4c>
 			Scheduler_Task_Array[index].Delay -= TICK;
- 800052a:	492a      	ldr	r1, [pc, #168]	; (80005d4 <Scheduler_Update+0xcc>)
- 800052c:	687a      	ldr	r2, [r7, #4]
- 800052e:	4613      	mov	r3, r2
- 8000530:	009b      	lsls	r3, r3, #2
- 8000532:	4413      	add	r3, r2
- 8000534:	009b      	lsls	r3, r3, #2
- 8000536:	440b      	add	r3, r1
- 8000538:	3304      	adds	r3, #4
- 800053a:	681b      	ldr	r3, [r3, #0]
- 800053c:	f1a3 010a 	sub.w	r1, r3, #10
- 8000540:	4824      	ldr	r0, [pc, #144]	; (80005d4 <Scheduler_Update+0xcc>)
- 8000542:	687a      	ldr	r2, [r7, #4]
- 8000544:	4613      	mov	r3, r2
- 8000546:	009b      	lsls	r3, r3, #2
- 8000548:	4413      	add	r3, r2
- 800054a:	009b      	lsls	r3, r3, #2
- 800054c:	4403      	add	r3, r0
- 800054e:	3304      	adds	r3, #4
- 8000550:	6019      	str	r1, [r3, #0]
- 8000552:	e031      	b.n	80005b8 <Scheduler_Update+0xb0>
+ 800047a:	492a      	ldr	r1, [pc, #168]	; (8000524 <Scheduler_Update+0xcc>)
+ 800047c:	687a      	ldr	r2, [r7, #4]
+ 800047e:	4613      	mov	r3, r2
+ 8000480:	009b      	lsls	r3, r3, #2
+ 8000482:	4413      	add	r3, r2
+ 8000484:	009b      	lsls	r3, r3, #2
+ 8000486:	440b      	add	r3, r1
+ 8000488:	3304      	adds	r3, #4
+ 800048a:	681b      	ldr	r3, [r3, #0]
+ 800048c:	f1a3 010a 	sub.w	r1, r3, #10
+ 8000490:	4824      	ldr	r0, [pc, #144]	; (8000524 <Scheduler_Update+0xcc>)
+ 8000492:	687a      	ldr	r2, [r7, #4]
+ 8000494:	4613      	mov	r3, r2
+ 8000496:	009b      	lsls	r3, r3, #2
+ 8000498:	4413      	add	r3, r2
+ 800049a:	009b      	lsls	r3, r3, #2
+ 800049c:	4403      	add	r3, r0
+ 800049e:	3304      	adds	r3, #4
+ 80004a0:	6019      	str	r1, [r3, #0]
+ 80004a2:	e031      	b.n	8000508 <Scheduler_Update+0xb0>
 		}
 		else{
 			Scheduler_Task_Array[index].Runme += 1;
- 8000554:	491f      	ldr	r1, [pc, #124]	; (80005d4 <Scheduler_Update+0xcc>)
- 8000556:	687a      	ldr	r2, [r7, #4]
- 8000558:	4613      	mov	r3, r2
- 800055a:	009b      	lsls	r3, r3, #2
- 800055c:	4413      	add	r3, r2
- 800055e:	009b      	lsls	r3, r3, #2
- 8000560:	440b      	add	r3, r1
- 8000562:	330c      	adds	r3, #12
- 8000564:	781b      	ldrb	r3, [r3, #0]
- 8000566:	3301      	adds	r3, #1
- 8000568:	b2d8      	uxtb	r0, r3
- 800056a:	491a      	ldr	r1, [pc, #104]	; (80005d4 <Scheduler_Update+0xcc>)
- 800056c:	687a      	ldr	r2, [r7, #4]
- 800056e:	4613      	mov	r3, r2
- 8000570:	009b      	lsls	r3, r3, #2
- 8000572:	4413      	add	r3, r2
- 8000574:	009b      	lsls	r3, r3, #2
- 8000576:	440b      	add	r3, r1
- 8000578:	330c      	adds	r3, #12
- 800057a:	4602      	mov	r2, r0
- 800057c:	701a      	strb	r2, [r3, #0]
+ 80004a4:	491f      	ldr	r1, [pc, #124]	; (8000524 <Scheduler_Update+0xcc>)
+ 80004a6:	687a      	ldr	r2, [r7, #4]
+ 80004a8:	4613      	mov	r3, r2
+ 80004aa:	009b      	lsls	r3, r3, #2
+ 80004ac:	4413      	add	r3, r2
+ 80004ae:	009b      	lsls	r3, r3, #2
+ 80004b0:	440b      	add	r3, r1
+ 80004b2:	330c      	adds	r3, #12
+ 80004b4:	781b      	ldrb	r3, [r3, #0]
+ 80004b6:	3301      	adds	r3, #1
+ 80004b8:	b2d8      	uxtb	r0, r3
+ 80004ba:	491a      	ldr	r1, [pc, #104]	; (8000524 <Scheduler_Update+0xcc>)
+ 80004bc:	687a      	ldr	r2, [r7, #4]
+ 80004be:	4613      	mov	r3, r2
+ 80004c0:	009b      	lsls	r3, r3, #2
+ 80004c2:	4413      	add	r3, r2
+ 80004c4:	009b      	lsls	r3, r3, #2
+ 80004c6:	440b      	add	r3, r1
+ 80004c8:	330c      	adds	r3, #12
+ 80004ca:	4602      	mov	r2, r0
+ 80004cc:	701a      	strb	r2, [r3, #0]
 			if(Scheduler_Task_Array[index].Period >0){
- 800057e:	4915      	ldr	r1, [pc, #84]	; (80005d4 <Scheduler_Update+0xcc>)
- 8000580:	687a      	ldr	r2, [r7, #4]
- 8000582:	4613      	mov	r3, r2
- 8000584:	009b      	lsls	r3, r3, #2
- 8000586:	4413      	add	r3, r2
- 8000588:	009b      	lsls	r3, r3, #2
- 800058a:	440b      	add	r3, r1
- 800058c:	3308      	adds	r3, #8
- 800058e:	681b      	ldr	r3, [r3, #0]
- 8000590:	2b00      	cmp	r3, #0
- 8000592:	d011      	beq.n	80005b8 <Scheduler_Update+0xb0>
+ 80004ce:	4915      	ldr	r1, [pc, #84]	; (8000524 <Scheduler_Update+0xcc>)
+ 80004d0:	687a      	ldr	r2, [r7, #4]
+ 80004d2:	4613      	mov	r3, r2
+ 80004d4:	009b      	lsls	r3, r3, #2
+ 80004d6:	4413      	add	r3, r2
+ 80004d8:	009b      	lsls	r3, r3, #2
+ 80004da:	440b      	add	r3, r1
+ 80004dc:	3308      	adds	r3, #8
+ 80004de:	681b      	ldr	r3, [r3, #0]
+ 80004e0:	2b00      	cmp	r3, #0
+ 80004e2:	d011      	beq.n	8000508 <Scheduler_Update+0xb0>
 				Scheduler_Task_Array[index].Delay = Scheduler_Task_Array[index].Period;
- 8000594:	490f      	ldr	r1, [pc, #60]	; (80005d4 <Scheduler_Update+0xcc>)
- 8000596:	687a      	ldr	r2, [r7, #4]
- 8000598:	4613      	mov	r3, r2
- 800059a:	009b      	lsls	r3, r3, #2
- 800059c:	4413      	add	r3, r2
- 800059e:	009b      	lsls	r3, r3, #2
- 80005a0:	440b      	add	r3, r1
- 80005a2:	3308      	adds	r3, #8
- 80005a4:	6819      	ldr	r1, [r3, #0]
- 80005a6:	480b      	ldr	r0, [pc, #44]	; (80005d4 <Scheduler_Update+0xcc>)
- 80005a8:	687a      	ldr	r2, [r7, #4]
- 80005aa:	4613      	mov	r3, r2
- 80005ac:	009b      	lsls	r3, r3, #2
- 80005ae:	4413      	add	r3, r2
- 80005b0:	009b      	lsls	r3, r3, #2
- 80005b2:	4403      	add	r3, r0
- 80005b4:	3304      	adds	r3, #4
- 80005b6:	6019      	str	r1, [r3, #0]
+ 80004e4:	490f      	ldr	r1, [pc, #60]	; (8000524 <Scheduler_Update+0xcc>)
+ 80004e6:	687a      	ldr	r2, [r7, #4]
+ 80004e8:	4613      	mov	r3, r2
+ 80004ea:	009b      	lsls	r3, r3, #2
+ 80004ec:	4413      	add	r3, r2
+ 80004ee:	009b      	lsls	r3, r3, #2
+ 80004f0:	440b      	add	r3, r1
+ 80004f2:	3308      	adds	r3, #8
+ 80004f4:	6819      	ldr	r1, [r3, #0]
+ 80004f6:	480b      	ldr	r0, [pc, #44]	; (8000524 <Scheduler_Update+0xcc>)
+ 80004f8:	687a      	ldr	r2, [r7, #4]
+ 80004fa:	4613      	mov	r3, r2
+ 80004fc:	009b      	lsls	r3, r3, #2
+ 80004fe:	4413      	add	r3, r2
+ 8000500:	009b      	lsls	r3, r3, #2
+ 8000502:	4403      	add	r3, r0
+ 8000504:	3304      	adds	r3, #4
+ 8000506:	6019      	str	r1, [r3, #0]
 	for(int index = 0 ; index  < current_index ; ++index){
- 80005b8:	687b      	ldr	r3, [r7, #4]
- 80005ba:	3301      	adds	r3, #1
- 80005bc:	607b      	str	r3, [r7, #4]
- 80005be:	687a      	ldr	r2, [r7, #4]
- 80005c0:	4b05      	ldr	r3, [pc, #20]	; (80005d8 <Scheduler_Update+0xd0>)
- 80005c2:	681b      	ldr	r3, [r3, #0]
- 80005c4:	429a      	cmp	r2, r3
- 80005c6:	d3a5      	bcc.n	8000514 <Scheduler_Update+0xc>
+ 8000508:	687b      	ldr	r3, [r7, #4]
+ 800050a:	3301      	adds	r3, #1
+ 800050c:	607b      	str	r3, [r7, #4]
+ 800050e:	687a      	ldr	r2, [r7, #4]
+ 8000510:	4b05      	ldr	r3, [pc, #20]	; (8000528 <Scheduler_Update+0xd0>)
+ 8000512:	681b      	ldr	r3, [r3, #0]
+ 8000514:	429a      	cmp	r2, r3
+ 8000516:	d3a5      	bcc.n	8000464 <Scheduler_Update+0xc>
 			}
 		}
 	}
 }
- 80005c8:	bf00      	nop
- 80005ca:	bf00      	nop
- 80005cc:	370c      	adds	r7, #12
- 80005ce:	46bd      	mov	sp, r7
- 80005d0:	bc80      	pop	{r7}
- 80005d2:	4770      	bx	lr
- 80005d4:	2000016c 	.word	0x2000016c
- 80005d8:	2000008c 	.word	0x2000008c
+ 8000518:	bf00      	nop
+ 800051a:	bf00      	nop
+ 800051c:	370c      	adds	r7, #12
+ 800051e:	46bd      	mov	sp, r7
+ 8000520:	bc80      	pop	{r7}
+ 8000522:	4770      	bx	lr
+ 8000524:	2000016c 	.word	0x2000016c
+ 8000528:	2000008c 	.word	0x2000008c
 
-080005dc <Scheduler_Dispatch_Task>:
+0800052c <Scheduler_Dispatch_Task>:
+
 void Scheduler_Dispatch_Task(){
- 80005dc:	b580      	push	{r7, lr}
- 80005de:	b082      	sub	sp, #8
- 80005e0:	af00      	add	r7, sp, #0
+ 800052c:	b580      	push	{r7, lr}
+ 800052e:	b082      	sub	sp, #8
+ 8000530:	af00      	add	r7, sp, #0
 	for(int index = 0 ; index  < current_index; ++index){
- 80005e2:	2300      	movs	r3, #0
- 80005e4:	607b      	str	r3, [r7, #4]
- 80005e6:	e04a      	b.n	800067e <Scheduler_Dispatch_Task+0xa2>
+ 8000532:	2300      	movs	r3, #0
+ 8000534:	607b      	str	r3, [r7, #4]
+ 8000536:	e04a      	b.n	80005ce <Scheduler_Dispatch_Task+0xa2>
 		if(Scheduler_Task_Array[index].Runme >0){
- 80005e8:	492a      	ldr	r1, [pc, #168]	; (8000694 <Scheduler_Dispatch_Task+0xb8>)
- 80005ea:	687a      	ldr	r2, [r7, #4]
- 80005ec:	4613      	mov	r3, r2
- 80005ee:	009b      	lsls	r3, r3, #2
- 80005f0:	4413      	add	r3, r2
- 80005f2:	009b      	lsls	r3, r3, #2
- 80005f4:	440b      	add	r3, r1
- 80005f6:	330c      	adds	r3, #12
- 80005f8:	781b      	ldrb	r3, [r3, #0]
- 80005fa:	2b00      	cmp	r3, #0
- 80005fc:	d03c      	beq.n	8000678 <Scheduler_Dispatch_Task+0x9c>
+ 8000538:	492a      	ldr	r1, [pc, #168]	; (80005e4 <Scheduler_Dispatch_Task+0xb8>)
+ 800053a:	687a      	ldr	r2, [r7, #4]
+ 800053c:	4613      	mov	r3, r2
+ 800053e:	009b      	lsls	r3, r3, #2
+ 8000540:	4413      	add	r3, r2
+ 8000542:	009b      	lsls	r3, r3, #2
+ 8000544:	440b      	add	r3, r1
+ 8000546:	330c      	adds	r3, #12
+ 8000548:	781b      	ldrb	r3, [r3, #0]
+ 800054a:	2b00      	cmp	r3, #0
+ 800054c:	d03c      	beq.n	80005c8 <Scheduler_Dispatch_Task+0x9c>
 			(*Scheduler_Task_Array[index].pfunction)();
- 80005fe:	4925      	ldr	r1, [pc, #148]	; (8000694 <Scheduler_Dispatch_Task+0xb8>)
- 8000600:	687a      	ldr	r2, [r7, #4]
- 8000602:	4613      	mov	r3, r2
- 8000604:	009b      	lsls	r3, r3, #2
- 8000606:	4413      	add	r3, r2
- 8000608:	009b      	lsls	r3, r3, #2
- 800060a:	440b      	add	r3, r1
- 800060c:	681b      	ldr	r3, [r3, #0]
- 800060e:	4798      	blx	r3
+ 800054e:	4925      	ldr	r1, [pc, #148]	; (80005e4 <Scheduler_Dispatch_Task+0xb8>)
+ 8000550:	687a      	ldr	r2, [r7, #4]
+ 8000552:	4613      	mov	r3, r2
+ 8000554:	009b      	lsls	r3, r3, #2
+ 8000556:	4413      	add	r3, r2
+ 8000558:	009b      	lsls	r3, r3, #2
+ 800055a:	440b      	add	r3, r1
+ 800055c:	681b      	ldr	r3, [r3, #0]
+ 800055e:	4798      	blx	r3
 			/* CODE TO TEST SCHEDULER BEGIN*/
 			sprintf(str, "Task %d has Dispatch at Tick %ld ms \r\n",order,counter);
- 8000610:	4b21      	ldr	r3, [pc, #132]	; (8000698 <Scheduler_Dispatch_Task+0xbc>)
- 8000612:	681a      	ldr	r2, [r3, #0]
- 8000614:	4b21      	ldr	r3, [pc, #132]	; (800069c <Scheduler_Dispatch_Task+0xc0>)
- 8000616:	681b      	ldr	r3, [r3, #0]
- 8000618:	4921      	ldr	r1, [pc, #132]	; (80006a0 <Scheduler_Dispatch_Task+0xc4>)
- 800061a:	4822      	ldr	r0, [pc, #136]	; (80006a4 <Scheduler_Dispatch_Task+0xc8>)
- 800061c:	f001 ffa2 	bl	8002564 <siprintf>
+ 8000560:	4b21      	ldr	r3, [pc, #132]	; (80005e8 <Scheduler_Dispatch_Task+0xbc>)
+ 8000562:	681a      	ldr	r2, [r3, #0]
+ 8000564:	4b21      	ldr	r3, [pc, #132]	; (80005ec <Scheduler_Dispatch_Task+0xc0>)
+ 8000566:	681b      	ldr	r3, [r3, #0]
+ 8000568:	4921      	ldr	r1, [pc, #132]	; (80005f0 <Scheduler_Dispatch_Task+0xc4>)
+ 800056a:	4822      	ldr	r0, [pc, #136]	; (80005f4 <Scheduler_Dispatch_Task+0xc8>)
+ 800056c:	f001 fffa 	bl	8002564 <siprintf>
 			/*CODE TO TEST SCHEDULER END*/
 			Scheduler_Task_Array[index].Runme -= 1;
- 8000620:	491c      	ldr	r1, [pc, #112]	; (8000694 <Scheduler_Dispatch_Task+0xb8>)
- 8000622:	687a      	ldr	r2, [r7, #4]
- 8000624:	4613      	mov	r3, r2
- 8000626:	009b      	lsls	r3, r3, #2
- 8000628:	4413      	add	r3, r2
- 800062a:	009b      	lsls	r3, r3, #2
- 800062c:	440b      	add	r3, r1
- 800062e:	330c      	adds	r3, #12
- 8000630:	781b      	ldrb	r3, [r3, #0]
- 8000632:	3b01      	subs	r3, #1
- 8000634:	b2d8      	uxtb	r0, r3
- 8000636:	4917      	ldr	r1, [pc, #92]	; (8000694 <Scheduler_Dispatch_Task+0xb8>)
- 8000638:	687a      	ldr	r2, [r7, #4]
- 800063a:	4613      	mov	r3, r2
- 800063c:	009b      	lsls	r3, r3, #2
- 800063e:	4413      	add	r3, r2
- 8000640:	009b      	lsls	r3, r3, #2
- 8000642:	440b      	add	r3, r1
- 8000644:	330c      	adds	r3, #12
- 8000646:	4602      	mov	r2, r0
- 8000648:	701a      	strb	r2, [r3, #0]
+ 8000570:	491c      	ldr	r1, [pc, #112]	; (80005e4 <Scheduler_Dispatch_Task+0xb8>)
+ 8000572:	687a      	ldr	r2, [r7, #4]
+ 8000574:	4613      	mov	r3, r2
+ 8000576:	009b      	lsls	r3, r3, #2
+ 8000578:	4413      	add	r3, r2
+ 800057a:	009b      	lsls	r3, r3, #2
+ 800057c:	440b      	add	r3, r1
+ 800057e:	330c      	adds	r3, #12
+ 8000580:	781b      	ldrb	r3, [r3, #0]
+ 8000582:	3b01      	subs	r3, #1
+ 8000584:	b2d8      	uxtb	r0, r3
+ 8000586:	4917      	ldr	r1, [pc, #92]	; (80005e4 <Scheduler_Dispatch_Task+0xb8>)
+ 8000588:	687a      	ldr	r2, [r7, #4]
+ 800058a:	4613      	mov	r3, r2
+ 800058c:	009b      	lsls	r3, r3, #2
+ 800058e:	4413      	add	r3, r2
+ 8000590:	009b      	lsls	r3, r3, #2
+ 8000592:	440b      	add	r3, r1
+ 8000594:	330c      	adds	r3, #12
+ 8000596:	4602      	mov	r2, r0
+ 8000598:	701a      	strb	r2, [r3, #0]
 			if(Scheduler_Task_Array[index].Period == 0){
- 800064a:	4912      	ldr	r1, [pc, #72]	; (8000694 <Scheduler_Dispatch_Task+0xb8>)
- 800064c:	687a      	ldr	r2, [r7, #4]
- 800064e:	4613      	mov	r3, r2
- 8000650:	009b      	lsls	r3, r3, #2
- 8000652:	4413      	add	r3, r2
- 8000654:	009b      	lsls	r3, r3, #2
- 8000656:	440b      	add	r3, r1
- 8000658:	3308      	adds	r3, #8
- 800065a:	681b      	ldr	r3, [r3, #0]
- 800065c:	2b00      	cmp	r3, #0
- 800065e:	d10b      	bne.n	8000678 <Scheduler_Dispatch_Task+0x9c>
+ 800059a:	4912      	ldr	r1, [pc, #72]	; (80005e4 <Scheduler_Dispatch_Task+0xb8>)
+ 800059c:	687a      	ldr	r2, [r7, #4]
+ 800059e:	4613      	mov	r3, r2
+ 80005a0:	009b      	lsls	r3, r3, #2
+ 80005a2:	4413      	add	r3, r2
+ 80005a4:	009b      	lsls	r3, r3, #2
+ 80005a6:	440b      	add	r3, r1
+ 80005a8:	3308      	adds	r3, #8
+ 80005aa:	681b      	ldr	r3, [r3, #0]
+ 80005ac:	2b00      	cmp	r3, #0
+ 80005ae:	d10b      	bne.n	80005c8 <Scheduler_Dispatch_Task+0x9c>
 				Scheduler_Delete_Task(Scheduler_Task_Array[index].Task_ID);
- 8000660:	490c      	ldr	r1, [pc, #48]	; (8000694 <Scheduler_Dispatch_Task+0xb8>)
- 8000662:	687a      	ldr	r2, [r7, #4]
- 8000664:	4613      	mov	r3, r2
- 8000666:	009b      	lsls	r3, r3, #2
- 8000668:	4413      	add	r3, r2
- 800066a:	009b      	lsls	r3, r3, #2
- 800066c:	440b      	add	r3, r1
- 800066e:	3310      	adds	r3, #16
- 8000670:	681b      	ldr	r3, [r3, #0]
- 8000672:	4618      	mov	r0, r3
- 8000674:	f000 f81a 	bl	80006ac <Scheduler_Delete_Task>
+ 80005b0:	490c      	ldr	r1, [pc, #48]	; (80005e4 <Scheduler_Dispatch_Task+0xb8>)
+ 80005b2:	687a      	ldr	r2, [r7, #4]
+ 80005b4:	4613      	mov	r3, r2
+ 80005b6:	009b      	lsls	r3, r3, #2
+ 80005b8:	4413      	add	r3, r2
+ 80005ba:	009b      	lsls	r3, r3, #2
+ 80005bc:	440b      	add	r3, r1
+ 80005be:	3310      	adds	r3, #16
+ 80005c0:	681b      	ldr	r3, [r3, #0]
+ 80005c2:	4618      	mov	r0, r3
+ 80005c4:	f000 f872 	bl	80006ac <Scheduler_Delete_Task>
 	for(int index = 0 ; index  < current_index; ++index){
- 8000678:	687b      	ldr	r3, [r7, #4]
- 800067a:	3301      	adds	r3, #1
- 800067c:	607b      	str	r3, [r7, #4]
- 800067e:	687a      	ldr	r2, [r7, #4]
- 8000680:	4b09      	ldr	r3, [pc, #36]	; (80006a8 <Scheduler_Dispatch_Task+0xcc>)
- 8000682:	681b      	ldr	r3, [r3, #0]
- 8000684:	429a      	cmp	r2, r3
- 8000686:	d3af      	bcc.n	80005e8 <Scheduler_Dispatch_Task+0xc>
+ 80005c8:	687b      	ldr	r3, [r7, #4]
+ 80005ca:	3301      	adds	r3, #1
+ 80005cc:	607b      	str	r3, [r7, #4]
+ 80005ce:	687a      	ldr	r2, [r7, #4]
+ 80005d0:	4b09      	ldr	r3, [pc, #36]	; (80005f8 <Scheduler_Dispatch_Task+0xcc>)
+ 80005d2:	681b      	ldr	r3, [r3, #0]
+ 80005d4:	429a      	cmp	r2, r3
+ 80005d6:	d3af      	bcc.n	8000538 <Scheduler_Dispatch_Task+0xc>
 			}
 		}
 	}
-
 }
- 8000688:	bf00      	nop
- 800068a:	bf00      	nop
- 800068c:	3708      	adds	r7, #8
- 800068e:	46bd      	mov	sp, r7
- 8000690:	bd80      	pop	{r7, pc}
- 8000692:	bf00      	nop
- 8000694:	2000016c 	.word	0x2000016c
- 8000698:	20000098 	.word	0x20000098
- 800069c:	2000009c 	.word	0x2000009c
- 80006a0:	08002df0 	.word	0x08002df0
- 80006a4:	20000138 	.word	0x20000138
- 80006a8:	2000008c 	.word	0x2000008c
+ 80005d8:	bf00      	nop
+ 80005da:	bf00      	nop
+ 80005dc:	3708      	adds	r7, #8
+ 80005de:	46bd      	mov	sp, r7
+ 80005e0:	bd80      	pop	{r7, pc}
+ 80005e2:	bf00      	nop
+ 80005e4:	2000016c 	.word	0x2000016c
+ 80005e8:	20000098 	.word	0x20000098
+ 80005ec:	2000009c 	.word	0x2000009c
+ 80005f0:	08002df0 	.word	0x08002df0
+ 80005f4:	20000138 	.word	0x20000138
+ 80005f8:	2000008c 	.word	0x2000008c
+
+080005fc <Scheduler_Add_Task>:
+
+uint32_t Scheduler_Add_Task(void (*pfunction)(),uint32_t delay, uint32_t period){
+ 80005fc:	b480      	push	{r7}
+ 80005fe:	b085      	sub	sp, #20
+ 8000600:	af00      	add	r7, sp, #0
+ 8000602:	60f8      	str	r0, [r7, #12]
+ 8000604:	60b9      	str	r1, [r7, #8]
+ 8000606:	607a      	str	r2, [r7, #4]
+	if(current_index < MAX_TASK){
+ 8000608:	4b25      	ldr	r3, [pc, #148]	; (80006a0 <Scheduler_Add_Task+0xa4>)
+ 800060a:	681b      	ldr	r3, [r3, #0]
+ 800060c:	2b27      	cmp	r3, #39	; 0x27
+ 800060e:	d83e      	bhi.n	800068e <Scheduler_Add_Task+0x92>
+		Scheduler_Task_Array[current_index].pfunction = pfunction;
+ 8000610:	4b23      	ldr	r3, [pc, #140]	; (80006a0 <Scheduler_Add_Task+0xa4>)
+ 8000612:	681a      	ldr	r2, [r3, #0]
+ 8000614:	4923      	ldr	r1, [pc, #140]	; (80006a4 <Scheduler_Add_Task+0xa8>)
+ 8000616:	4613      	mov	r3, r2
+ 8000618:	009b      	lsls	r3, r3, #2
+ 800061a:	4413      	add	r3, r2
+ 800061c:	009b      	lsls	r3, r3, #2
+ 800061e:	440b      	add	r3, r1
+ 8000620:	68fa      	ldr	r2, [r7, #12]
+ 8000622:	601a      	str	r2, [r3, #0]
+		Scheduler_Task_Array[current_index].Delay = delay;
+ 8000624:	4b1e      	ldr	r3, [pc, #120]	; (80006a0 <Scheduler_Add_Task+0xa4>)
+ 8000626:	681a      	ldr	r2, [r3, #0]
+ 8000628:	491e      	ldr	r1, [pc, #120]	; (80006a4 <Scheduler_Add_Task+0xa8>)
+ 800062a:	4613      	mov	r3, r2
+ 800062c:	009b      	lsls	r3, r3, #2
+ 800062e:	4413      	add	r3, r2
+ 8000630:	009b      	lsls	r3, r3, #2
+ 8000632:	440b      	add	r3, r1
+ 8000634:	3304      	adds	r3, #4
+ 8000636:	68ba      	ldr	r2, [r7, #8]
+ 8000638:	601a      	str	r2, [r3, #0]
+		Scheduler_Task_Array[current_index].Period = period;
+ 800063a:	4b19      	ldr	r3, [pc, #100]	; (80006a0 <Scheduler_Add_Task+0xa4>)
+ 800063c:	681a      	ldr	r2, [r3, #0]
+ 800063e:	4919      	ldr	r1, [pc, #100]	; (80006a4 <Scheduler_Add_Task+0xa8>)
+ 8000640:	4613      	mov	r3, r2
+ 8000642:	009b      	lsls	r3, r3, #2
+ 8000644:	4413      	add	r3, r2
+ 8000646:	009b      	lsls	r3, r3, #2
+ 8000648:	440b      	add	r3, r1
+ 800064a:	3308      	adds	r3, #8
+ 800064c:	687a      	ldr	r2, [r7, #4]
+ 800064e:	601a      	str	r2, [r3, #0]
+		Scheduler_Task_Array[current_index].Runme = 0;
+ 8000650:	4b13      	ldr	r3, [pc, #76]	; (80006a0 <Scheduler_Add_Task+0xa4>)
+ 8000652:	681a      	ldr	r2, [r3, #0]
+ 8000654:	4913      	ldr	r1, [pc, #76]	; (80006a4 <Scheduler_Add_Task+0xa8>)
+ 8000656:	4613      	mov	r3, r2
+ 8000658:	009b      	lsls	r3, r3, #2
+ 800065a:	4413      	add	r3, r2
+ 800065c:	009b      	lsls	r3, r3, #2
+ 800065e:	440b      	add	r3, r1
+ 8000660:	330c      	adds	r3, #12
+ 8000662:	2200      	movs	r2, #0
+ 8000664:	701a      	strb	r2, [r3, #0]
+		Scheduler_Task_Array[current_index].Task_ID = current_index;
+ 8000666:	4b0e      	ldr	r3, [pc, #56]	; (80006a0 <Scheduler_Add_Task+0xa4>)
+ 8000668:	681a      	ldr	r2, [r3, #0]
+ 800066a:	4b0d      	ldr	r3, [pc, #52]	; (80006a0 <Scheduler_Add_Task+0xa4>)
+ 800066c:	6819      	ldr	r1, [r3, #0]
+ 800066e:	480d      	ldr	r0, [pc, #52]	; (80006a4 <Scheduler_Add_Task+0xa8>)
+ 8000670:	4613      	mov	r3, r2
+ 8000672:	009b      	lsls	r3, r3, #2
+ 8000674:	4413      	add	r3, r2
+ 8000676:	009b      	lsls	r3, r3, #2
+ 8000678:	4403      	add	r3, r0
+ 800067a:	3310      	adds	r3, #16
+ 800067c:	6019      	str	r1, [r3, #0]
+		current_index++;
+ 800067e:	4b08      	ldr	r3, [pc, #32]	; (80006a0 <Scheduler_Add_Task+0xa4>)
+ 8000680:	681b      	ldr	r3, [r3, #0]
+ 8000682:	3301      	adds	r3, #1
+ 8000684:	4a06      	ldr	r2, [pc, #24]	; (80006a0 <Scheduler_Add_Task+0xa4>)
+ 8000686:	6013      	str	r3, [r2, #0]
+		return current_index;
+ 8000688:	4b05      	ldr	r3, [pc, #20]	; (80006a0 <Scheduler_Add_Task+0xa4>)
+ 800068a:	681b      	ldr	r3, [r3, #0]
+ 800068c:	e003      	b.n	8000696 <Scheduler_Add_Task+0x9a>
+	}
+	else{
+		ERROR_CODE_G = ERROR_SCHEDULER_TOO_MANY_TASK;
+ 800068e:	4b06      	ldr	r3, [pc, #24]	; (80006a8 <Scheduler_Add_Task+0xac>)
+ 8000690:	2201      	movs	r2, #1
+ 8000692:	701a      	strb	r2, [r3, #0]
+		return 0;
+ 8000694:	2300      	movs	r3, #0
+	}
+}
+ 8000696:	4618      	mov	r0, r3
+ 8000698:	3714      	adds	r7, #20
+ 800069a:	46bd      	mov	sp, r7
+ 800069c:	bc80      	pop	{r7}
+ 800069e:	4770      	bx	lr
+ 80006a0:	2000008c 	.word	0x2000008c
+ 80006a4:	2000016c 	.word	0x2000016c
+ 80006a8:	20000090 	.word	0x20000090
 
 080006ac <Scheduler_Delete_Task>:
 
